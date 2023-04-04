@@ -15,26 +15,27 @@ from langchain.chains.conversation.memory import ConversationBufferMemory
 
 load_dotenv()
 
-loader = TextLoader('./wineinfo.txt')
-documents = loader.load()
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-docs = text_splitter.split_documents(documents)
+# loader = TextLoader('./wineinfo.txt')
+# documents = loader.load()
+# text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+# docs = text_splitter.split_documents(documents)
 
 embeddings = OpenAIEmbeddings()
 # vector_db = FAISS.from_documents(docs, embeddings)
-# vector_db.save_local("./embeddings")
-vector_db = FAISS.load_local("./embeddings", embeddings)
-llm = ChatOpenAI(temperature=0)
-
+#
 # extra_info: DataFrame = pd.read_excel("qa.xlsx")
 # qa_list = extra_info.to_dict(orient="records")
 # for qa_item in qa_list:
 #     document = Document(page_content=f"Q: {qa_item['Prompt']}\nA: {qa_item['Completion']}")
 #     vector_db.add_documents([document])
+#
+llm = ChatOpenAI(temperature=0)
+# vector_db.save_local("./embeddings")
+vector_db = FAISS.load_local("./embeddings", embeddings)
 
 vector_template = """You are a chatbot having a conversation with a human
 
-Try to avoid repeating one wine name several times and if possible try to mention product url everytime.
+Try to avoid repeating one wine name several times and if possible try to mention product url wrapped in <a> tag everytime.
 Given the following extracted parts of a long document and a question, create a final answer.
 
 {context}
